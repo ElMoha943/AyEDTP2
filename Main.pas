@@ -17,10 +17,11 @@ procedure ordenarCiudades();
 		i,k: Integer;
 		aux: string;
 	begin
+		// for i := 0 to contCiudades do
 		i := contCiudades;
 		while (i >= 0) do
 			begin
-	      if ciudades[i - 1][0] < ciudades[i][0] then //SE FIJA SI ES MAYOR
+	      if ciudades[i - 1][0] > ciudades[i][0] then //SE FIJA SI ES MAYOR
 	        for k := 0 to 2 do
 	        	//COPIA LOS DATOS DE UNA A OTRA
 	          begin
@@ -28,7 +29,7 @@ procedure ordenarCiudades();
 	            ciudades[i][k] := ciudades[i - 1][k];
 	            ciudades[i - 1][k] := aux;
 	          end;
-	      i := i-1;
+	      i:= i - 1;
       end;
 	end;
 
@@ -37,6 +38,7 @@ procedure mostrarCiudades();
 		max, i, id: Integer;
 	begin
 		max := 0;
+		id := 0;
 		for i:= 0 to contCiudades do
 		begin
 		writeln(ciudades[i][1]+' - '+ciudades[i][2]);
@@ -64,7 +66,6 @@ procedure altaEmpresa();
 			if(length(empresas[contEmpresas][0])<=3) then
 				pass:=true
 			else
-				pass:=false;
 				writeln('El codigo debe tener un maximo de 3 caracteres. Ingreselo nuevamente:');
 		until(pass=true);
 		pass:=false;
@@ -97,9 +98,9 @@ procedure altaEmpresa();
 procedure altaCliente();
 	begin
 		ClrScr();
-		writeln('Ingrese el nombre de la ciudad.');
+		writeln('Ingrese el nombre del cliente.');
 		readln(clientes[contClientes][0]);
-		writeln('Ingrese el mail de la empresa.');
+		writeln('Ingrese el mail del cliente.');
 		readln(clientes[contClientes][1]);
 		writeln('Cliente a'+#164+'adido exitosamente, pulse cualquier tecla para volver al menu anterior.');
 		readKey();
@@ -125,6 +126,7 @@ procedure altaProyecto();
 	var
 		i: integer;
 		pass:boolean;
+		opt: string;
 	begin
 		ClrScr();
 		writeln('Ingrese el codigo del proyecto.');
@@ -142,20 +144,28 @@ procedure altaProyecto();
 		until(pass=true);
 		pass:=false;
 		writeln('Ingrese la etapa del proyecto.'+#13+#10+'P. Preventa'+#13+#10+'O. Obra'+#13+#10+'T. Terminado');
-		readln(proyectos[contProyectos][2]);
+		repeat
+			readln(proyectos[contProyectos][2]);
+		until ((proyectos[contProyectos][2]= 'P') or (proyectos[contProyectos][2]= 'O') or (proyectos[contProyectos][2]= 'T'));
+		
 		writeln('Ingrese el tipo de proyecto.'+#13+#10+'C. Casa'+#13+#10+'D. Departamento'+#13+#10+'O. Oficina'+#13+#10+'L. Lotes');
-		readln(proyectos[contProyectos][3]);
-		writeln('Ingrese el codigo de la ciudad.');
-		repeat //VALIDACION DE SI LA CIUDAD EXISTE
-			readln(proyectos[contProyectos][4]);
-			for i := 0 to contCiudades do
+		repeat
+			readln(proyectos[contProyectos][3]);
+		until ((proyectos[contProyectos][2]= 'C' ) or (proyectos[contProyectos][2]= 'D' ) or 
+			(proyectos[contProyectos][2]= 'O' ) or (proyectos[contProyectos][2]= 'L' ));
+		writeln('Seleccione una ciudad.');
+		for i := 0 to contCiudades-1 do
+			writeLn(IntToStr(i+1) + '. ' + ciudades[i,1]); //ESCRIBE LAS OPCIONES
+		repeat
+			readln(opt); //LEE LA OPCION
+		until (StrToInt(opt) <= contCiudades);
+		ClrScr;
+		for i := 0 to contCiudades-1 do
 			begin
-				if(ciudades[i][0] = proyectos[contProyectos][4]) then
-					pass:=true
+				if (opt = IntToStr(i+1)) then
+						empresas[contEmpresas][4] := ciudades[i,0];
+						ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1);
 			end;
-			if(pass=false) then
-				writeln('Esa ciudad no existe. Ingreselo nuevamente:')
-		until(pass=true);
 		writeln('Proyecto a'+#164+'adido exitosamente, pulse cualquier tecla para volver al menu anterior.');
 		contProyectos:=contProyectos+1;
 		readKey();
@@ -302,15 +312,24 @@ end;
 
 BEGIN //Main
 	contProyectos := 0;
-	contCiudades := 3;
+	contCiudades := 0;
 	contClientes := 0;
 	contEmpresas := 0;
-  Ciudades[0][0] := 'BAS';
-  Ciudades[0][1] := 'Buenos Aires';
-  Ciudades[2][0] := 'CBA';
-  Ciudades[2][1] := 'Cordoba';
-  Ciudades[1][0] := 'ROS';
-  Ciudades[1][1] := 'Rosario';
+	proyectos[0][0] := 'Pr1';
+	proyectos[0][1] := 'Co1';
+	proyectos[0][2] := 'P';
+	proyectos[0][3] := 'C';
+	proyectos[0][4] := 'CBA';
+	proyectos[0][5] := '2';
+  // Ciudades[0][0] := 'BAS';
+  // Ciudades[0][1] := 'Buenos Aires';
+  // Ciudades[0][2] := '1';
+  // Ciudades[1][0] := 'ROS';
+  // Ciudades[1][1] := 'Rosario';
+  // Ciudades[1][2] := '3';
+  // Ciudades[2][0] := 'CBA';
+  // Ciudades[2][1] := 'Cordoba';
+  // Ciudades[2][2] := '2';
   repeat
   	ClrScr();
   	writeln('Menu: '+#13+#10+'1. Empresas.'+#13+#10+'2. Clientes.'+#13+#10+'0. Salir'+#13+#10+'');
