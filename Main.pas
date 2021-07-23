@@ -59,10 +59,11 @@ procedure altaEmpresa();
 		i: integer;
 	begin
 		pass:=false;
-		ClrScr;
+		ClrScr();
 		writeln('Ingrese el codigo de la empresa.'); //string(3)
 		repeat //VALIDACION DE LARGO DEL CODIGO
 			readln(empresas[contEmpresas][0]);
+			empresas[contEmpresas][0] := AnsiUpperCase(empresas[contEmpresas][0]);
 			if(length(empresas[contEmpresas][0])<=3) then
 				pass:=true
 			else
@@ -83,7 +84,7 @@ procedure altaEmpresa();
 		repeat
 			readln(opt); //LEE LA OPCION
 		until (StrToInt(opt) <= contCiudades);
-		ClrScr;
+		ClrScr();
 		for i := 0 to contCiudades-1 do
 			begin
 				if (opt = IntToStr(i)) then
@@ -93,27 +94,30 @@ procedure altaEmpresa();
 					end;
 			end;
 		writeln(Utf8ToAnsi('Empresa añadida exitosamente, pulse cualquier tecla para volver al menu anterior.'));
-		readKey;
+		readKey();
 		contEmpresas := contEmpresas + 1;
 	end;
 
 procedure altaCliente();
 	begin
-		ClrScr;
+		ClrScr();
 		writeln('Ingrese el nombre del cliente.');
 		readln(clientes[contClientes][0]);
 		writeln('Ingrese el mail del cliente.');
 		readln(clientes[contClientes][1]);
 		writeln(Utf8ToAnsi('Cliente añadido exitosamente, pulse cualquier tecla para volver al menu anterior.'));
-		readKey;
+		readKey();
 		contClientes := contClientes + 1;
 	end;
 
 procedure altaCiudad();
 	begin
-		ClrScr;
+		ClrScr();
 		writeln('Ingrese el codigo de la ciudad.');
-		readln(ciudades[contCiudades][0]);
+		repeat
+			readln(ciudades[contCiudades][0]);
+			ciudades[contCiudades][0] := AnsiUpperCase(ciudades[contCiudades][0]);
+		until length((ciudades[contCiudades][0] <=3));
 		writeln('Ingrese el nombre de la ciudad.');
 		readln(ciudades[contCiudades][1]);
 		writeln(Utf8ToAnsi('Ciudad añadida exitosamente, pulse cualquier tecla para volver al menu anterior.'));
@@ -121,7 +125,7 @@ procedure altaCiudad();
 		ordenarCiudades();
 		mostrarCiudades();
 		contCiudades := contCiudades+1;
-		readKey;
+		readKey();
 	end;
 
 procedure altaProyecto();
@@ -130,47 +134,53 @@ procedure altaProyecto();
 		pass:boolean;
 		opt: string;
 	begin
-		ClrScr;
+		ClrScr();
 		writeln('Ingrese el codigo del proyecto.');
-		readln(proyectos[contProyectos][0]);
-		writeln('Ingrese el codigo de la empresa.');
-		repeat //VALIDACION DE SI LA EMPRESA EXISTE
-			readln(proyectos[contProyectos][1]);
-			for i := 0 to contEmpresas do
+		repeat
+			readln(proyectos[contProyectos][0]);
+			proyectos[contProyectos][0] := AnsiUpperCase(proyectos[contProyectos][0]);
+		until (length(proyectos[contProyectos][0] <= 3));
+		proyectos[contProyectos][0] := AnsiUpperCase(proyectos[contProyectos][0]);
+		writeLn('Selecciona una empresa');
+		for i := 0 to contEmpresas-1 do
+			writeLn(IntToStr(i+1) + '. ' + empresas[i,1]); //ESCRIBE LAS OPCIONES
+		repeat
+			readln(opt); //LEE LA OPCION
+		until (StrToInt(opt) <= contEmpresas);
+		ClrScr();
+		for i := 0 to contEmpresas-1 do
 			begin
-				if(empresas[i][0] = proyectos[contProyectos][1]) then
-					pass:=true
+				if (opt = IntToStr(i)) then
+					begin
+						proyectos[contProyectos][5] := empresas[i,0];
+					end;
 			end;
-			if(pass=false) then
-				writeln('Esa ciudad no existe. Ingreselo nuevamente:')
-		until(pass=true);
-		pass:=false;
 		writeln('Ingrese la etapa del proyecto.'+#13+#10+'P. Preventa'+#13+#10+'O. Obra'+#13+#10+'T. Terminado');
 		repeat
 			readln(proyectos[contProyectos][2]);
 		until ((proyectos[contProyectos][2]= 'P') or (proyectos[contProyectos][2]= 'O') or (proyectos[contProyectos][2]= 'T'));
-		
 		writeln('Ingrese el tipo de proyecto.'+#13+#10+'C. Casa'+#13+#10+'D. Departamento'+#13+#10+'O. Oficina'+#13+#10+'L. Lotes');
 		repeat
 			readln(proyectos[contProyectos][3]);
 		until ((proyectos[contProyectos][2]= 'C' ) or (proyectos[contProyectos][2]= 'D' ) or 
 			(proyectos[contProyectos][2]= 'O' ) or (proyectos[contProyectos][2]= 'L' ));
-		writeln('Seleccione una ciudad.');
+		writeLn('Selecciona una ciudad');
 		for i := 0 to contCiudades-1 do
 			writeLn(IntToStr(i+1) + '. ' + ciudades[i,1]); //ESCRIBE LAS OPCIONES
 		repeat
 			readln(opt); //LEE LA OPCION
 		until (StrToInt(opt) <= contCiudades);
-		ClrScr;
+		ClrScr();
 		for i := 0 to contCiudades-1 do
 			begin
-				if (opt = IntToStr(i+1)) then
-						empresas[contEmpresas][4] := ciudades[i,0];
-						ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1);
+				if (opt = IntToStr(i)) then
+					begin
+						proyectos[contProyectos][5] := ciudades[i,0];
+					end;
 			end;
 		writeln(Utf8ToAnsi('Proyecto añadido exitosamente, pulse cualquier tecla para volver al menu anterior.'));
 		contProyectos:=contProyectos+1;
-		readKey;
+		readKey();
 	end;
 
 procedure altaProducto();
@@ -185,8 +195,8 @@ var
 begin
 	writeLn('¿Que tipo de proyecto quieres consultar?'+#13+#10+'C. Casa'+#13+#10+'D. Edificio departamentado'
 		+#13+#10+'O. Edificio oficina'+#13+#10+'L. Loteos respectivamente');
-	opt:= readKey;
-	ClrScr;
+	opt:= readKey();
+	ClrScr();
 	for i := 0 to contProyectos do
 		begin
 			if proyectos[i,3] = opt then
@@ -215,7 +225,7 @@ begin
 				end;	
 		end;
 	writeln('Toque cualquier tecla para continuar');
-	readKey;
+	readKey();
 end;
 
 procedure showEmpresa();
@@ -223,10 +233,10 @@ procedure showEmpresa();
 		opt: char;
 begin
 	repeat
-		ClrScr;
+		ClrScr();
 	    writeln('MENU EMPRESAS DESARROLLADORAS:'+#13+#10+'1. Alta de CIUDADES '+#13+#10+'2. Alta de EMPRESAS '+#13+#10+'3. Alta de PROYECTOS'+#13+#10+'4. Alta de Productos '+#13+#10+'0. Volver al menu principal');
 	    repeat
-	    	opt := readKey;
+	    	opt := readKey();
 	    until((opt = '1') or (opt = '2') or (opt = '3') or (opt = '4') or (opt = '0'));
 	    case opt of
 	    	'1': altaCiudad();
@@ -236,16 +246,16 @@ begin
 	    end;
 	until(opt = '0');
 end;
-	
+
 procedure showCliente();
 	var
 		opt: char;
 begin
 	repeat
-		ClrScr;
+		ClrScr();
 		writeln('MENU CLIENTES:'+#13+#10+'1. Alta de Clientes '+#13+#10+'2. Consulta de PROYECTOS'+#13+#10+'0. Volver al menu principal');
 		repeat
-      opt := readKey;
+      opt := readKey();
     until ((opt = '1') or (opt = '2') or (opt = '0'));
     case opt of
 	    '1': altaCliente();
@@ -267,11 +277,11 @@ begin
   while (attempts > 0) do
     begin
       attempts := (attempts-1);
-      ClrScr;
+      ClrScr();
       writeln('Ingrese la clave. ', attempts+1, ' intentos restantes');
       repeat
-        c := readKey;
-        ClrScr;
+        c := readKey();
+        ClrScr();
         writeln('Ingrese la clave. ', attempts+1, ' intentos restantes');
         if(c = #08) then
         	begin
@@ -307,9 +317,8 @@ begin
       end;
     end;
   writeln('Agotaste los intentos, pulsa cualquier tecla para continuar.');
-  readKey;
-  ClrScr;
-  exit(false);
+  readKey();
+  Halt(0);
 end;
 
 BEGIN //Main
@@ -333,11 +342,11 @@ BEGIN //Main
   ciudades[2][1] := 'Cordoba';
   ciudades[2][2] := '0';
   repeat
-  	ClrScr;
+  	ClrScr();
   	writeln('Menu: '+#13+#10+'1. Empresas.'+#13+#10+'2. Clientes.'+#13+#10+'0. Salir'+#13+#10+'');
 	   //menu principal
 		repeat
-      option := readKey;
+      option := readKey();
 		until ((option = '1') or (option = '2') or (option = '0'));
 		if (option <> '0') then
 		begin
