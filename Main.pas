@@ -117,7 +117,7 @@ procedure altaCiudad();
 		repeat
 			readln(ciudades[contCiudades][0]);
 			ciudades[contCiudades][0] := AnsiUpperCase(ciudades[contCiudades][0]);
-		until length((ciudades[contCiudades][0] <=3));
+		until (length(ciudades[contCiudades][0]) <=3);
 		writeln('Ingrese el nombre de la ciudad.');
 		readln(ciudades[contCiudades][1]);
 		writeln(Utf8ToAnsi('Ciudad añadida exitosamente, pulse cualquier tecla para volver al menu anterior.'));
@@ -139,7 +139,7 @@ procedure altaProyecto();
 		repeat
 			readln(proyectos[contProyectos][0]);
 			proyectos[contProyectos][0] := AnsiUpperCase(proyectos[contProyectos][0]);
-		until (length(proyectos[contProyectos][0] <= 3));
+		until (length(proyectos[contProyectos][0]) <= 3);
 		proyectos[contProyectos][0] := AnsiUpperCase(proyectos[contProyectos][0]);
 		writeLn('Selecciona una empresa');
 		for i := 0 to contEmpresas-1 do
@@ -322,25 +322,10 @@ begin
 end;
 
 BEGIN //Main
-	contProyectos := 0;
-	contCiudades := 3;
-	contClientes := 0;
-	contEmpresas := 0;
-	proyectos[0][0] := 'Pr1';
-	proyectos[0][1] := 'Co1';
-	proyectos[0][2] := 'P';
-	proyectos[0][3] := 'C';
-	proyectos[0][4] := 'CBA';
-	proyectos[0][5] := '2';
-  ciudades[0][0] := 'BAS';
-  ciudades[0][1] := 'Buenos Aires';
-  ciudades[0][2] := '0';
-  ciudades[1][0] := 'ROS';
-  ciudades[1][1] := 'Rosario';
-  ciudades[1][2] := '0';
-  ciudades[2][0] := 'CBA';
-  ciudades[2][1] := 'Cordoba';
-  ciudades[2][2] := '0';
+  contProyectos := 0;
+  contCiudades := 3;
+  contClientes := 0;
+  contEmpresas := 0;
   repeat
   	ClrScr();
   	writeln('Menu: '+#13+#10+'1. Empresas.'+#13+#10+'2. Clientes.'+#13+#10+'0. Salir'+#13+#10+'');
