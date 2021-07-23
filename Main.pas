@@ -42,7 +42,7 @@ procedure mostrarCiudades();
 		for i:= 0 to contCiudades do
 		begin
 		writeln(ciudades[i][1]+' - '+ciudades[i][2]);
-		if(ciudades[i][2] <> '') then
+		if (ciudades[i][2] <> '') then
 			if (StrToInt(ciudades[i][2]) > max) then
 			begin
 				max := StrToInt(ciudades[i][2]);
@@ -59,7 +59,7 @@ procedure altaEmpresa();
 		i: integer;
 	begin
 		pass:=false;
-		ClrScr();
+		ClrScr;
 		writeln('Ingrese el codigo de la empresa.'); //string(3)
 		repeat //VALIDACION DE LARGO DEL CODIGO
 			readln(empresas[contEmpresas][0]);
@@ -86,40 +86,42 @@ procedure altaEmpresa();
 		ClrScr;
 		for i := 0 to contCiudades-1 do
 			begin
-				if (opt = IntToStr(i+1)) then
-						empresas[contEmpresas][4] := ciudades[i,0];
+				if (opt = IntToStr(i)) then
+					begin
+						empresas[contEmpresas][5] := ciudades[i,0];
 						ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1);
+					end;
 			end;
-		writeln('Empresa a'+#164+'adida exitosamente, pulse cualquier tecla para volver al menu anterior.');
-		readKey();
+		writeln(Utf8ToAnsi('Empresa añadida exitosamente, pulse cualquier tecla para volver al menu anterior.'));
+		readKey;
 		contEmpresas := contEmpresas + 1;
 	end;
 
 procedure altaCliente();
 	begin
-		ClrScr();
+		ClrScr;
 		writeln('Ingrese el nombre del cliente.');
 		readln(clientes[contClientes][0]);
 		writeln('Ingrese el mail del cliente.');
 		readln(clientes[contClientes][1]);
-		writeln('Cliente a'+#164+'adido exitosamente, pulse cualquier tecla para volver al menu anterior.');
-		readKey();
+		writeln(Utf8ToAnsi('Cliente añadido exitosamente, pulse cualquier tecla para volver al menu anterior.'));
+		readKey;
 		contClientes := contClientes + 1;
 	end;
 
 procedure altaCiudad();
 	begin
-		ClrScr();
+		ClrScr;
 		writeln('Ingrese el codigo de la ciudad.');
 		readln(ciudades[contCiudades][0]);
 		writeln('Ingrese el nombre de la ciudad.');
 		readln(ciudades[contCiudades][1]);
-		writeln('Ciudad a'+#164+'adida exitosamente, pulse cualquier tecla para volver al menu anterior.');
+		writeln(Utf8ToAnsi('Ciudad añadida exitosamente, pulse cualquier tecla para volver al menu anterior.'));
 		ciudades[contCiudades][2] := '0';
 		ordenarCiudades();
 		mostrarCiudades();
 		contCiudades := contCiudades+1;
-		readKey();
+		readKey;
 	end;
 
 procedure altaProyecto();
@@ -128,7 +130,7 @@ procedure altaProyecto();
 		pass:boolean;
 		opt: string;
 	begin
-		ClrScr();
+		ClrScr;
 		writeln('Ingrese el codigo del proyecto.');
 		readln(proyectos[contProyectos][0]);
 		writeln('Ingrese el codigo de la empresa.');
@@ -166,9 +168,9 @@ procedure altaProyecto();
 						empresas[contEmpresas][4] := ciudades[i,0];
 						ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1);
 			end;
-		writeln('Proyecto a'+#164+'adido exitosamente, pulse cualquier tecla para volver al menu anterior.');
+		writeln(Utf8ToAnsi('Proyecto añadido exitosamente, pulse cualquier tecla para volver al menu anterior.'));
 		contProyectos:=contProyectos+1;
-		readKey();
+		readKey;
 	end;
 
 procedure altaProducto();
@@ -183,8 +185,8 @@ var
 begin
 	writeLn('¿Que tipo de proyecto quieres consultar?'+#13+#10+'C. Casa'+#13+#10+'D. Edificio departamentado'
 		+#13+#10+'O. Edificio oficina'+#13+#10+'L. Loteos respectivamente');
-	opt:= readKey();
-	ClrScr();
+	opt:= readKey;
+	ClrScr;
 	for i := 0 to contProyectos do
 		begin
 			if proyectos[i,3] = opt then
@@ -213,7 +215,7 @@ begin
 				end;	
 		end;
 	writeln('Toque cualquier tecla para continuar');
-	readKey();
+	readKey;
 end;
 
 procedure showEmpresa();
@@ -221,10 +223,10 @@ procedure showEmpresa();
 		opt: char;
 begin
 	repeat
-		ClrScr();
+		ClrScr;
 	    writeln('MENU EMPRESAS DESARROLLADORAS:'+#13+#10+'1. Alta de CIUDADES '+#13+#10+'2. Alta de EMPRESAS '+#13+#10+'3. Alta de PROYECTOS'+#13+#10+'4. Alta de Productos '+#13+#10+'0. Volver al menu principal');
 	    repeat
-	    	opt := readKey();
+	    	opt := readKey;
 	    until((opt = '1') or (opt = '2') or (opt = '3') or (opt = '4') or (opt = '0'));
 	    case opt of
 	    	'1': altaCiudad();
@@ -240,10 +242,10 @@ procedure showCliente();
 		opt: char;
 begin
 	repeat
-		ClrScr();
+		ClrScr;
 		writeln('MENU CLIENTES:'+#13+#10+'1. Alta de Clientes '+#13+#10+'2. Consulta de PROYECTOS'+#13+#10+'0. Volver al menu principal');
 		repeat
-      opt := readKey();
+      opt := readKey;
     until ((opt = '1') or (opt = '2') or (opt = '0'));
     case opt of
 	    '1': altaCliente();
@@ -265,11 +267,11 @@ begin
   while (attempts > 0) do
     begin
       attempts := (attempts-1);
-      ClrScr();
+      ClrScr;
       writeln('Ingrese la clave. ', attempts+1, ' intentos restantes');
       repeat
-        c := readkey();
-        ClrScr();
+        c := readKey;
+        ClrScr;
         writeln('Ingrese la clave. ', attempts+1, ' intentos restantes');
         if(c = #08) then
         	begin
@@ -305,14 +307,14 @@ begin
       end;
     end;
   writeln('Agotaste los intentos, pulsa cualquier tecla para continuar.');
-  readKey();
-  ClrScr();
+  readKey;
+  ClrScr;
   exit(false);
 end;
 
 BEGIN //Main
 	contProyectos := 0;
-	contCiudades := 0;
+	contCiudades := 3;
 	contClientes := 0;
 	contEmpresas := 0;
 	proyectos[0][0] := 'Pr1';
@@ -321,21 +323,21 @@ BEGIN //Main
 	proyectos[0][3] := 'C';
 	proyectos[0][4] := 'CBA';
 	proyectos[0][5] := '2';
-  // Ciudades[0][0] := 'BAS';
-  // Ciudades[0][1] := 'Buenos Aires';
-  // Ciudades[0][2] := '1';
-  // Ciudades[1][0] := 'ROS';
-  // Ciudades[1][1] := 'Rosario';
-  // Ciudades[1][2] := '3';
-  // Ciudades[2][0] := 'CBA';
-  // Ciudades[2][1] := 'Cordoba';
-  // Ciudades[2][2] := '2';
+  ciudades[0][0] := 'BAS';
+  ciudades[0][1] := 'Buenos Aires';
+  ciudades[0][2] := '0';
+  ciudades[1][0] := 'ROS';
+  ciudades[1][1] := 'Rosario';
+  ciudades[1][2] := '0';
+  ciudades[2][0] := 'CBA';
+  ciudades[2][1] := 'Cordoba';
+  ciudades[2][2] := '0';
   repeat
-  	ClrScr();
+  	ClrScr;
   	writeln('Menu: '+#13+#10+'1. Empresas.'+#13+#10+'2. Clientes.'+#13+#10+'0. Salir'+#13+#10+'');
 	   //menu principal
 		repeat
-      option := readKey();
+      option := readKey;
 		until ((option = '1') or (option = '2') or (option = '0'));
 		if (option <> '0') then
 		begin
