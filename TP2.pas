@@ -1,511 +1,406 @@
-Program TP2;
+program tpayed2;
 uses crt, sysutils;
+
 var
-	menuOption: char;
-	accType, i, j, k, countCompanies, countCities, countClients, countProjects: integer;
-	response: boolean;
-	arrayCompanies: array [0..100,0..5] of string;
-	arrayCities: array [0..100,0..2] of string;
-	arrayClients: array [0..100,0..2] of string;
-	arrayProjects: array [0..100,0..5] of string;
+option: char;
+access, pass: boolean;
+empresas: array[0..9,0..5] of string;
+ciudades: array[0..9,0..2] of string;
+clientes: array[0..9,0..1] of string;
+proyectos: array[0..9,0..5] of string;
+contEmpresas, contCiudades, contClientes, contProyectos, i: integer; 
 
-function auth(accType : String): boolean;
-var
-	generatedPass, inputPass: string;
-	ch: char;
-	i: integer;
-
-procedure insertPass();
-var
-	cont, i: integer;
-begin
-	i := -1;
-	inputPass := '';
-
-  		repeat
-   			begin
-   				ch:= readkey;
-   				ClrScr;
-				Sound(700);
-  				Delay(100);
-  				NoSound;
-  				
-  				if (ch <> #13) then
-  					begin
-  						if (ch = #08) then
-  							begin
-  								i:= i - 1;
-  								delete(inputPass,length(inputPass),1);
-  								for cont := 0 to i do 
-   									begin
-   										write('*');
-   									end;
-  							end
-  						else
-  							begin
-  								i:= i + 1;
-  								inputPass:= inputPass + ch;
-   								for cont := 0 to i do 
-   									begin
-   										write('*');
-   									end;
-  							end
-  					end
-  				
-  			end;
-  		until (ch = #13) or (i = 10);
-end;
-
-begin
-	writeLn('Ingresar clave');
-	insertPass();
-
-	if(accType = 'E') then
-		begin
-			generatedPass:= 'E';
-		end
-	else
-		begin
-			generatedPass:= 'C';
-		end;
-	if (inputPass = generatedPass) then
-		begin
-			auth:= true;
-		end
-	else
-		begin
-			i:= 1;
-			while not (inputPass = generatedPass) and (i <= 3) do
-				begin
-					ClrScr;
-				 	writeLn('Clave invalida, prueba nuevamente (',i,'/3)');
-				 	insertPass();
-				 	i:= i + 1;
-				 	ClrScr;
-				 end;
-			if (inputPass <> generatedPass) then
-				begin
-					auth:= false;
-				end
-			else if (inputPass = generatedPass) then
-				begin
-					auth:= true;
-				end
-		end;
-end;
-
-procedure company();
-
-procedure cities();
-var
-	finishUpload, aux: string;
-begin
-	repeat
-		repeat
+procedure ordenarCiudades();
+	var
+		i,k: Integer;
+		aux: string;
+	begin
+		// for i := 0 to contCiudades do
+		i := contCiudades;
+		while (i >= 0) do
 			begin
-				writeLn('Ingresa el codigo de la ciudad');
-				readLn(arrayCities[countCities][0]);
-				ClrScr;
-			end
-		until (length(arrayCities[countCities][0]) < 4);
-		writeLn('Ingresa el nombre de la ciudad');
-		readLn(arrayCities[countCities][1]);
-		ClrScr;
+	      if ciudades[i - 1][0] > ciudades[i][0] then //SE FIJA SI ES MAYOR
+	        for k := 0 to 2 do
+	        	//COPIA LOS DATOS DE UNA A OTRA
+	          begin
+	            aux := ciudades[i][k];
+	            ciudades[i][k] := ciudades[i - 1][k];
+	            ciudades[i - 1][k] := aux;
+	          end;
+	      i := i - 1;
+      end;
+	end;
 
-		countCities := countCities + 1;
-
-		repeat
-			writeLn('¿Quieres seguir cargando ciudades? Ingresa SI o NO');
-			readLn(finishUpload);
-			ClrScr;
-		until (finishUpload = 'SI') or (finishUpload = 'NO');
-
-		for i := 0 to countCities do
-			if arrayCities[i + 1, 0] < arrayCities[i, 0] then
-				for k := 0 to 1 do
+procedure mostrarCiudades();
+	var
+		max, i, id: Integer;
+	begin
+		max := 0;
+		id := 0;
+		for i := 0 to contCiudades do
+			begin
+				writeln(ciudades[i][1] + ' - ' + ciudades[i][2]);
+				if ciudades[i][2] <> '' then
 					begin
-						aux := arrayCities[i,k];
-						arrayCities[i,k] := arrayCities[i + 1,k];
-						arrayCities[i + 1,k] := aux;
-					end;
-
-		// for i := 0 to countCities - 1 do
-		// 	for j := i + 1 to countCities do
-		// 		if arrayCities[i,0] > arrayCities[j,0] then
-		// 			for k := 0 to 1 do
-		// 				begin
-		// 					aux := arrayCities[i,k];
-		// 					arrayCities[i,k] := arrayCities[j,k];
-		// 					arrayCities[j,k] := aux;
-		// 				end;
-
-		for i := 0 to countCities do
-			begin
-			for j := 0 to 2 do
-				write(arrayCities[i,j]+' ');
-				writeLn;
-			end;
-
-	until (finishUpload = 'NO')
-end;
-
-procedure companies();
-var
-	countRos, countCba, countBas: integer;
-	inputCity, finishUpload: string;
-begin
-	countRos := 0;
-	countCba := 0;
-	countBas := 0;
-
-	repeat
-		repeat
-			begin
-				writeLn('Ingresa el codigo de la empresa');
-				readLn(arrayCompanies[countCompanies][0]);
-				ClrScr;
-			end
-		until (length(arrayCities[countCities][0]) < 4);
-		ClrScr;
-		writeLn('Ingresa el nombre de la empresa');
-		readLn(arrayCompanies[countCompanies][1]);
-		ClrScr;
-		writeLn('Ingresa la dirección de la empresa');
-		readLn(arrayCompanies[countCompanies][2]);
-		ClrScr;
-		writeLn('Ingresa el mail de la empresa');
-		readLn(arrayCompanies[countCompanies][3]);
-		ClrScr;
-		writeLn('Ingresa el teléfono de la empresa');
-		readLn(arrayCompanies[countCompanies][4]);
-		ClrScr;
-
-		writeLn('Selecciona una ciudad');
-		for i := 0 to countCities-1 do
-			begin
-				writeLn(IntToStr(i+1) + '. ' + arrayCities[i,1]);
-			end;
-		menuOption:= readKey;
-		ClrScr;
-
-		for i := 0 to countCities-1 do
-			begin
-				if (menuOption = IntToStr(i+1)) then
-					begin
-						arrayCompanies[countCompanies][4] := arrayCities[i,0];
-						writeLn(IntToStr(i+1)+ '. ' +IntToStr(i+1) + '. ' + arrayCities[i,1]);
-					end
-			end;
-		ClrScr;
-
-		countCompanies := countCompanies + 1;
-
-		repeat
-			writeLn('¿Quieres seguir cargando empresas? Ingresa SI o NO');
-			readLn(finishUpload);
-			ClrScr;
-		until (finishUpload = 'SI') or (finishUpload = 'NO');
-
-		for i := 0 to countCompanies do
-			begin
-			for j := 0 to 5 do
-				write(arrayCompanies[i,j]+' ');
-				writeLn;
-			end;
-
-		case inputCity of
-			'ROS': countRos:= countRos + 1;
-			'CBA': countCba:= countCba + 1;
-			'BAS': countBas:= countBas + 1;
-		end
-	until (finishUpload = 'NO');
-	writeLn('ROS tiene: ',countRos,' CBA tiene: ',countCba,' BAS tiene: ',countBas);
-	if countRos > countCba then
-		begin
-			if countRos > countBas then
-				writeLn('Rosario tiene mayor cantidad')
-			else
-				writeLn('Buenos Aires tiene mayor cantidad')
-		end
-	else
-		begin
-			if countCba > countBas then
-				writeLn('Cordoba tiene mayor cantidad')
-			else
-				writeLn('Buenos Aires tiene mayor cantidad')
-		end
-end;
-
-procedure projects();
-var
-	inputCode, inputCompany, inputPhase, inputType, inputCity, inputQuantity, finishUpload: string;
-begin	
-	repeat
-		writeLn('Ingresa el codigo del proyecto');
-		readLn(arrayProjects[countProjects][0]);
-		ClrScr;
-
-		writeLn('Selecciona una empresa');
-		for i := 0 to countCompanies-1 do
-			begin
-				writeLn(IntToStr(i+1) + '. ' + arrayCompanies[i,1]);
-			end;
-		menuOption:= readKey;
-		ClrScr;
-
-		for i := 0 to countCompanies-1 do
-			begin
-				if (menuOption = IntToStr(i+1)) then
-					begin
-						arrayProjects[countProjects][1] := arrayCompanies[i,0];
-						writeLn(IntToStr(i+1)+ '. ' +IntToStr(i+1) + '. ' + arrayCompanies[i,1]);
-					end
-			end;
-		ClrScr;
-
-		writeLn('Ingresa la etapa - preventa (P) obra (O) terminado (T)');
-		readLn(arrayProjects[countProjects][2]);
-		ClrScr;
-
-		writeLn('Ingresa el tipo - casa (C) edificio departamentado (D) edificio oficina (O) loteos (L)');
-		readLn(arrayProjects[countProjects][3]);
-		ClrScr;
-
-		writeLn('Selecciona una ciudad');
-		for i := 0 to countCities-1 do
-			begin
-				writeLn(IntToStr(i+1) + '. ' + arrayCities[i,1]);
-			end;
-		menuOption:= readKey;
-		ClrScr;
-
-		for i := 0 to countCities-1 do
-			begin
-				if (menuOption = IntToStr(i+1)) then
-					begin
-						arrayProjects[countProjects][4] := arrayCities[i,0];
-						writeLn(IntToStr(i+1)+ '. ' +IntToStr(i+1) + '. ' + arrayCities[i,1]);
-					end
-			end;
-		ClrScr;
-		writeLn('Ingresa la cantidad');
-		readLn(arrayProjects[countProjects][5]);
-		ClrScr;
-
-		countProjects := countProjects + 1;
-
-		repeat
-			writeLn('¿Quieres seguir cargando proyectos? Ingresa SI o NO');
-			readLn(finishUpload);
-			ClrScr;
-		until (finishUpload = 'SI') or (finishUpload = 'NO');
-
-		for i := 0 to countProjects do
-			begin
-			for j := 0 to 5 do
-				write(arrayProjects[i,j]+' ');
-				writeLn;
-			end;
-
-	until (finishUpload = 'NO')
-
-end;
-
-procedure products();
-var
-	response: boolean;
-	menuOption: integer;
-begin
-	writeLn('Programa en desarrollo');
-end;
-
-begin
-	response:= auth('E');
-	if (response = false) then 
-		begin
-			writeLn('Acceso denegado, servidor bloqueado temporalmente');
-			Halt(0);
-		end;
-
-	repeat
-		writeLn('MENU EMPRESAS');
-		writeLn('1. Alta de CIUDADES');
-		writeLn('2. Alta de EMPRESAS');
-		writeLn('3. Alta de PROYECTOS');
-		writeLn('4. Alta de PRODUCTOS');
-		writeLn('0. SALIR');
-		menuOption:= readKey;
-		ClrScr;
-
-		case menuOption of
-			'1': cities();
-			'2': companies();
-			'3': projects();
-			'4': products();
-		end
-	until (menuOption = '0');
-end;
-
-procedure client();
-
-procedure clients();
-var
-	inputName, inputMail, finishUpload: string;
-
-begin
-	repeat
-		writeLn('Ingresa el nombre y apellido');
-		readLn(arrayClients[countClients][0]);
-		ClrScr;
-		writeLn('Ingresa el mail');
-		readLn(arrayClients[countClients][1]);
-		ClrScr;
-
-		countClients := countClients + 1;
-
-		repeat
-			writeLn('¿Quieres seguir cargando clientes? Ingresa SI o NO');
-			readLn(finishUpload);
-			ClrScr;
-		until (finishUpload = 'SI') or (finishUpload = 'NO');
-
-		for i := 0 to countClients do
-			begin
-			for j := 0 to 5 do
-				write(arrayClients[i,j]+' ');
-				writeLn;
-			end;
-
-	until (finishUpload = 'NO')
-end;
-
-procedure projects();
-var
-	arrayQueryProjects: array [0..100,0..5] of string;
-	countQueryProjects, i, j: integer;
-
-begin
-	countQueryProjects := 0;
-	// i := 0;
-
-	writeLn('¿Que tipo de proyecto quieres consultar?');
-	writeLn('C. Casa');
-	writeLn('D. Edificio departamentado');
-	writeLn('O. Edificio oficina');
-	writeLn('L. Loteos respectivamente');
-
-	menuOption:= readKey;
-	ClrScr;
-
-
-
-	for i := 0 to countProjects do
-		begin
-			if arrayProjects[i,3] = menuOption then 
-				begin
-					arrayQueryProjects[countQueryProjects][0] := arrayProjects[i,0];
-					for j := 0 to countCompanies do
-						if arrayCompanies[j,0] = arrayProjects[i,1] then 
+						if StrToInt(ciudades[i][2]) > max then
 							begin
-								arrayQueryProjects[countQueryProjects,1] := arrayCompanies[i,1];
+								max := StrToInt(ciudades[i][2]);
+								id := i;
 							end;
-					
-					case arrayProjects[i,2] of
-						'P': arrayQueryProjects[countQueryProjects,2] := 'Preventa';
-						'O': arrayQueryProjects[countQueryProjects,2] := 'Obra';
-						'T': arrayQueryProjects[countQueryProjects,2] := 'Terminado respectivamente';
+						end;
 					end;
 
-					case arrayProjects[i,3] of
-						'C': arrayQueryProjects[countQueryProjects,3] := 'Casa';
-						'D': arrayQueryProjects[countQueryProjects,2] := 'Edificio departamentado';
-						'O': arrayQueryProjects[countQueryProjects,2] := 'Edificio oficina';
-						'L': arrayQueryProjects[countQueryProjects,2] := 'Loteos respectivamente';
+		writeln('La ciudad con mas empresas es '+ciudades[id][1]+', con un total de '+ciudades[id][2]+' empresas registradas.');
+	end;
+
+procedure altaEmpresa();
+	var
+		opt: string;
+		pass: boolean;
+		i: integer;
+	begin
+		pass := false;
+		ClrScr;
+
+		writeln(Utf8ToAnsi('Ingrese el código de la empresa.')); //string(3)
+		repeat //VALIDACION DE LARGO DEL CÓDIGO
+			readln(empresas[contEmpresas][0]);
+			if length(empresas[contEmpresas][0]) <= 3 then
+				pass := true
+			else
+				writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres. Ingreselo nuevamente:'));
+		until (pass = true);
+		pass := false;
+		ClrScr;
+
+		writeln('Ingrese el nombre de la empresa.');
+		readln(empresas[contEmpresas][1]);
+		ClrScr;
+
+		writeln('Ingrese la direccion de la empresa.');
+		readln(empresas[contEmpresas][2]);
+		ClrScr;
+
+		writeln('Ingrese el mail de la empresa.');
+		readln(empresas[contEmpresas][3]);
+		ClrScr;
+
+		writeln('Ingrese el telefono de la empresa.');
+		readln(empresas[contEmpresas][4]);
+		ClrScr;
+
+		repeat
+			writeLn('Selecciona una ciudad');
+			for i := 0 to contCiudades-1 do
+				writeLn(IntToStr(i+1) + '. ' + ciudades[i,1]); //ESCRIBE LAS OPCIONES
+
+			readln(opt); //LEE LA OPCION
+			ClrScr;
+		until (StrToInt(opt) <= contCiudades);
+
+		for i := 0 to contCiudades-1 do
+			begin
+				if opt = IntToStr(i) then
+					begin
+						empresas[contEmpresas][5] := ciudades[i,0];
+						ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1);
 					end;
+			end;
 
-					for j := 0 to countCities do
-						if arrayCities[j,0] = arrayProjects[i,4] then 
-							begin
-								arrayQueryProjects[countQueryProjects,4] := arrayCities[i,1];
-							end;
+		writeln(Utf8ToAnsi('Empresa añadida exitosamente, pulse cualquier tecla para volver al menu anterior.'));
+		readKey;
+		contEmpresas := contEmpresas + 1;
+	end;
 
-					arrayQueryProjects[countQueryProjects,5] := arrayProjects[i,5];
+procedure altaCliente();
+	begin
+		ClrScr;
+		writeln('Ingrese el nombre del cliente.');
+		readln(clientes[contClientes][0]);
+		ClrScr;
 
-					countQueryProjects := countQueryProjects + 1;
-				end	
-		end;
+		writeln('Ingrese el mail del cliente.');
+		readln(clientes[contClientes][1]);
+		ClrScr;
 
-	writeLn('cod_pro | cod_emp | etapa | tipo | cod_ciudad | cantidad');
+		writeln(Utf8ToAnsi('Cliente añadido exitosamente, pulse cualquier tecla para volver al menu anterior.'));
+		readKey;
+		contClientes := contClientes + 1;
+	end;
 
-	for i := 0 to countQueryProjects do
-		begin
-			for j := 0 to 5 do
-				write(arrayQueryProjects[i,j] + ' | ');
-				readKey;
-		end;
-end;
+procedure altaCiudad();
+	begin
+		ClrScr;
+		writeln(Utf8ToAnsi('Ingrese el código de la ciudad.'));
+		repeat //VALIDACION DE LARGO DEL CóDIGO
+			readln(ciudades[contCiudades][0]);
+			if length(ciudades[contCiudades][0]) <= 3 then
+				pass := true
+			else
+				writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres. Ingreselo nuevamente:'));
+		until(pass = true);
+		pass := false;
 
-begin
-	response:= auth('C');
-	if (response = false) then 
-		begin
-			writeLn('Acceso denegado, servidor bloqueado temporalmente');
-			Halt(0);
-		end;
+		writeln('Ingrese el nombre de la ciudad.');
+		readln(ciudades[contCiudades][1]);
+
+		writeln(Utf8ToAnsi('Ciudad añadida exitosamente, pulse cualquier tecla para volver al menu anterior.'));
+		ciudades[contCiudades][2] := '0';
+		ordenarCiudades();
+		mostrarCiudades();
+		contCiudades := contCiudades + 1;
+		readKey;
+	end;
+
+procedure altaProyecto();
+	var
+		i: integer;
+		opt: string;
+	begin
+		ClrScr;
+		writeln(Utf8ToAnsi('Ingrese el código del proyecto.'));
+		repeat //VALIDACION DE LARGO DEL CÓDIGO
+			readln(proyectos[contProyectos][0]);
+			if length(proyectos[contProyectos][0]) <= 3 then
+				pass := true
+			else
+				writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres. Ingreselo nuevamente:'));
+		until(pass = true);
+		pass := false;
+		ClrScr;
+
 		
-	repeat
-		writeLn('MENU CLIENTES');
-		writeLn('1. Alta de CLIENTE');
-		writeLn('2. Consulta de proyectos');
-		writeLn('0. Volver al menú principal');
-		menuOption:= readKey;
-		ClrScr;
+		repeat
+			writeln('Seleccione una empresa.');
+			for i := 0 to contEmpresas-1 do
+				writeLn(IntToStr(i+1) + '. ' + empresas[i,1]); //ESCRIBE LAS OPCIONES
+		
+			readln(opt); //LEE LA OPCION
+			ClrScr;
+		until (StrToInt(opt) <= contEmpresas);
 
-		case menuOption of
-			'1': clients();
-			'2': projects();
-		end
-	until (menuOption = '0');
+		for i := 0 to contEmpresas-1 do
+			begin
+				if opt = IntToStr(i+1) then
+					proyectos[contProyectos][2] := empresas[i,0];
+			end;
+
+		repeat
+			writeln('Ingrese la etapa del proyecto.'+#13+#10+'P. Preventa'+#13+#10+'O. Obra'+#13+#10+'T. Terminado');
+			readln(proyectos[contProyectos][2]);
+			ClrScr;
+		until (proyectos[contProyectos][2] = 'P') or (proyectos[contProyectos][2] = 'O') or (proyectos[contProyectos][2] = 'T');
+		
+		repeat
+			writeln('Ingrese el tipo de proyecto.'+#13+#10+'C. Casa'+#13+#10+'D. Departamento'+#13+#10+'O. Oficina'+#13+#10+'L. Lotes');
+			readln(proyectos[contProyectos][3]);
+			ClrScr;
+		until (proyectos[contProyectos][3] = 'C' ) or (proyectos[contProyectos][3] = 'D' ) or 
+			(proyectos[contProyectos][3] = 'O' ) or (proyectos[contProyectos][3] = 'L' );
+
+		repeat
+			writeln('Seleccione una ciudad.');
+			for i := 0 to contCiudades-1 do
+				writeLn(IntToStr(i+1) + '. ' + ciudades[i,1]); //ESCRIBE LAS OPCIONES
+		
+			readln(opt); //LEE LA OPCION
+			ClrScr;
+		until (StrToInt(opt) <= contCiudades);
+
+		for i := 0 to contCiudades-1 do
+			begin
+				if opt = IntToStr(i+1) then
+					empresas[contEmpresas][4] := ciudades[i,0];
+					ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1);
+			end;
+
+		writeln(Utf8ToAnsi('Proyecto añadido exitosamente, pulse cualquier tecla para volver al menu anterior.'));
+		contProyectos := contProyectos + 1;
+		readKey;
+	end;
+
+procedure mostrarProyecto();
+var
+	i, j: integer;
+	opt: char;
+begin
+	ClrScr;
+	repeat
+		writeLn(Utf8ToAnsi('¿Que tipo de proyecto quieres consultar?'+#13+#10+'C. Casa'+#13+#10+'D. Edificio departamentado'
+			+#13+#10+'O. Edificio oficina'+#13+#10+'L. Loteos respectivamente'));
+		opt := readKey;
+		ClrScr;
+	until (opt = 'C') or (opt = 'D') or (opt = 'O') or (opt = 'L');
+
+	for i := 0 to contProyectos do
+		begin
+			if proyectos[i,3] = opt then
+				begin
+					writeln(Utf8ToAnsi('Código de proyecto: ') + proyectos[i][0]);
+					for j := 0 to contEmpresas do
+						if empresas[j,0] = proyectos[i,1] then 
+							writeln('Empresa: '+ empresas[i][1]);
+					case proyectos[i,2] of
+						'P': writeln('Etapa: Preventa');
+						'O': writeln('Etapa: Obra');
+						'T': writeln('Etapa: Terminado');
+					end;
+					case proyectos[i,3] of
+						'C': writeln('Tipo: Casa');
+						'D': writeln('Tipo: Departamento');
+						'O': writeln('Tipo: Oficina');
+						'L': writeln('Tipo: Lote');
+					end;
+					for j := 0 to contCiudades do
+						if ciudades[j,0] = proyectos[i,4] then 
+							begin
+								writeln('Ciudad: '+ ciudades[i,1]);
+							end;
+					writeln('Cantidad: '+ proyectos[i][5]);
+				end;	
+		end;
+
+	writeln('Toque cualquier tecla para continuar');
+	readKey;
 end;
 
+procedure showEmpresa();
+	var
+		opt: char;
 begin
-	countCompanies := 1;
-	countCities := 3;
-	countClients := 1;
-	countProjects := 1;
-
-	arrayClients[0][0] := 'Name';
-	arrayClients[0][1] := 'Mail';
-	arrayCities[0][0] := 'BAS';
-	arrayCities[0][1] := 'Buenos Aires';
-	arrayCities[1][0] := 'CBA';
-	arrayCities[1][1] := 'Cordoba';
-	arrayCities[2][0] := 'ROS';
-	arrayCities[2][1] := 'Rosario';
-	arrayCompanies[0][0] := 'Co1';
-	arrayCompanies[0][1] := 'Empresa 1';
-	arrayCompanies[0][2] := 'Zeballos 1341';
-	arrayCompanies[0][3] := 'empresa@ejemplo.com';
-	arrayCompanies[0][4] := '4583818';
-	arrayCompanies[0][5] := 'BAS';
-	arrayProjects[0][0] := 'Pr1';
-	arrayProjects[0][1] := 'Co1';
-	arrayProjects[0][2] := 'P';
-	arrayProjects[0][3] := 'C';
-	arrayProjects[0][4] := 'CBA';
-	arrayProjects[0][5] := '2';
-
 	repeat
-		writeLn('MENU PRINCIPAL');
-		writeLn('1. EMPRESAS');
-		writeLn('2. CLIENTES');
-		writeLn('0. SALIR');
-		menuOption:= readKey;
 		ClrScr;
+	    writeln(Utf8ToAnsi('MENÚ EMPRESAS DESARROLLADORAS:'+#13+#10+'1. Alta de CIUDADES '+#13+#10+'2. Alta de EMPRESAS '+#13+#10+'3. Alta de PROYECTOS'+#13+#10+'4. Alta de PRODUCTOS (mantenimiento)'+#13+#10+'0. Volver al menú principal'));
+	    repeat
+	    	opt := readKey;
+	    until (opt = '1') or (opt = '2') or (opt = '3') or (opt = '4') or (opt = '0');
+	    case opt of
+	    	'1': altaCiudad();
+	    	'2': altaEmpresa();
+	    	'3': altaProyecto();
+	    	'4': ;
+	    end;
+	until (opt = '0');
+end;
+	
+procedure showCliente();
+	var
+		opt: char;
+begin
+	repeat
+		ClrScr;
+		writeln(Utf8ToAnsi('MENÚ CLIENTES:'+#13+#10+'1. Alta de CLIENTES '+#13+#10+'2. Consulta de PROYECTOS'+#13+#10+'0. Volver al menú principal'));
+		repeat
+      opt := readKey;
+    until (opt = '1') or (opt = '2') or (opt = '0');
+    case opt of
+	    '1': altaCliente();
+	    '2': mostrarProyecto();
+    end;
+  until (opt = '0');
+end;
 
-		case menuOption of
-			'1': company();
-			'2': client();
-		end
-	until (menuOption = '0');
+function login(tipo: char): boolean;
+var
+  attempts: integer;
+  clave, secret1, secret2 : string;
+  c: char;
+begin
+  attempts := 3;
+  clave := '';
+  secret1 := 'admin123';
+  secret2 := 'user123';
+  while (attempts > 0) do
+    begin
+      attempts := (attempts-1);
+      ClrScr;
+      writeln('Ingrese la clave. ', attempts + 1, ' intentos restantes');
+      repeat
+        c := readKey;
+        ClrScr;
+        writeln('Ingrese la clave. ', attempts + 1, ' intentos restantes');
+        if c = #08 then
+        	begin
+	          delete(clave,length(clave),1);
+	          for i := 1 to length(clave) do
+	            write('*');
+        	end
+        else
+	        begin 
+	        	if c <> #13 then
+	        		begin
+		            	clave := clave + c;
+		            	for i := 1 to length(clave) do
+		              	write('*')
+		        	end;
+	        end;
+      until (c = #13);
+      if tipo = '1' then
+      	begin
+        	if (clave = secret1) then
+          	exit(true)
+        	else
+       	  	clave := '';
+          	writeln('Clave incorrecta');
+      	end;
+      if tipo = '2' then
+      	begin
+        	if clave = secret2 then
+          	exit(true)
+        	else
+          	clave := '';
+          	writeln('Clave incorrecta');
+      	end;
+    end;
+  writeln('Agotaste los intentos, programa bloqueado temporalmente.');
+  Halt(0);
+  exit(false);
+end;
+
+begin //Main
+	contProyectos := 1;
+	contCiudades := 3;
+	contClientes := 0;
+	contEmpresas := 1;
+	proyectos[0][0] := 'Pr1';
+	proyectos[0][1] := 'Co1';
+	proyectos[0][2] := 'P';
+	proyectos[0][3] := 'C';
+	proyectos[0][4] := 'CBA';
+	proyectos[0][5] := '2';
+  ciudades[0][0] := 'BAS';
+  ciudades[0][1] := 'Buenos Aires';
+  ciudades[0][2] := '0';
+  ciudades[1][0] := 'ROS';
+  ciudades[1][1] := 'Rosario';
+  ciudades[1][2] := '0';
+  ciudades[2][0] := 'CBA';
+  ciudades[2][1] := 'Cordoba';
+  ciudades[2][2] := '0';
+  empresas[0,0] := 'Co1';
+	empresas[0,1] := 'Empresa 1';
+	empresas[0,2] := 'Zeballos 1341';
+	empresas[0,3] := 'empresa@ejemplo.com';
+	empresas[0,4] := '4583818';
+	empresas[0,5] := 'BAS';
+  repeat
+  	ClrScr;
+  	writeln(Utf8ToAnsi('MENÚ PRINCIPAL: '+#13+#10+'1. EMPRESAS'+#13+#10+'2. CLIENTES'+#13+#10+'0. Salir'+#13+#10));
+	   //menu principal
+		repeat
+      option := readKey;
+		until (option = '1') or (option = '2') or (option = '0');
+		if option <> '0' then
+			begin
+			  //login
+			  access := login(option);
+		    if access then
+			    begin
+			       case option of
+		            '1': showEmpresa();
+		            '2': showCliente();
+			       end;
+			    end;
+			end;
+	until (option = '0');
 end.
