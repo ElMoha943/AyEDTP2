@@ -12,10 +12,9 @@ contEmpresas, contCiudades, contClientes, contProyectos, i: integer;
 
 procedure ordenarCiudades();
 	var
-		i,k: Integer;
+		k: Integer;
 		aux: string;
 	begin
-		// for i := 0 to contCiudades do
 		i := contCiudades;
 		while (i >= 0) do
 			begin
@@ -33,7 +32,7 @@ procedure ordenarCiudades();
 
 procedure mostrarCiudades();
 	var
-		max, i, id: Integer;
+		max, id: Integer;
 	begin
 		max := 0;
 		id := 0;
@@ -51,27 +50,35 @@ procedure mostrarCiudades();
 					end;
 
 		writeln('La ciudad con mas empresas es '+ciudades[id][1]+', con un total de '+ciudades[id][2]+' empresas registradas.');
+		readkey;
 	end;
 
 procedure altaEmpresa();
 	var
-		opt: string;
-		pass: boolean;
-		i: integer;
+		opt, cod, telefono: string;
 	begin
-		pass := false;
-		ClrScr;
-
-		writeln(Utf8ToAnsi('Ingrese el código de la empresa.')); //string(3)
-		repeat //VALIDACION DE LARGO DEL CÓDIGO
-			readln(empresas[contEmpresas][0]);
-			if length(empresas[contEmpresas][0]) <= 3 then
-				pass := true
-			else
-				writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres. Ingreselo nuevamente:'));
-		until (pass = true);
-		pass := false;
-		ClrScr;
+		repeat
+			ClrScr;
+			pass := true; //Hacete que se repita el ingreso si el codigo es invalido.
+      writeln(Utf8ToAnsi('Ingrese el código de la empresa.'));
+      readln(cod);
+      for i := 0 to contEmpresas-1 do
+          begin
+              if cod = empresas[i][0] then //verifica que el codigo no exista.
+                  pass := false
+              else
+              		writeln(Utf8ToAnsi('Error: Ese código ya existe!'));
+              		readKey;
+          end;
+      if ((length(cod) > 3) or (length(cod) < 1)) then //Verigica el largo de lcodigo.
+        begin
+            pass := false;
+            writeln(Utf8ToAnsi('Error: El código debe tener entre 1 y 3 caracteres.'));
+            readKey;
+        end;
+	  until (pass = true);
+	  empresas[contEmpresas][0] := cod;
+	  ClrScr;
 
 		writeln('Ingrese el nombre de la empresa.');
 		readln(empresas[contEmpresas][1]);
@@ -83,27 +90,38 @@ procedure altaEmpresa();
 
 		writeln('Ingrese el mail de la empresa.');
 		readln(empresas[contEmpresas][3]);
-		ClrScr;
-
-		writeln('Ingrese el telefono de la empresa.');
-		readln(empresas[contEmpresas][4]);
-		ClrScr;
 
 		repeat
+			ClrScr
+			pass := true;
+			writeln('Ingrese el telefono de la empresa.');
+			readln(telefono);
+			for i := 0 to length(telefono) do
+	        begin
+	            if (telefono[i] < '9') or (telefono[i] > '0') then //CAMBIR, NO ANDA
+	            	begin
+	                pass := false;
+	                writeln('Error: Ese telefono no es valido!');
+	                readKey;
+	              end;
+	        end;
+		until (pass=true);
+		empresas[contEmpresas][4] := telefono;
+		
+		repeat
+			ClrScr
 			writeLn('Selecciona una ciudad');
 			for i := 0 to contCiudades-1 do
 				writeLn(IntToStr(i+1) + '. ' + ciudades[i,1]); //ESCRIBE LAS OPCIONES
-
 			readln(opt); //LEE LA OPCION
-			ClrScr;
 		until (StrToInt(opt) <= contCiudades);
 
 		for i := 0 to contCiudades-1 do
 			begin
 				if opt = IntToStr(i) then
 					begin
-						empresas[contEmpresas][5] := ciudades[i,0];
-						ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1);
+						empresas[contEmpresas][5] := ciudades[i,0]; //Asigna el codigo de ciudad a la empresa.
+						ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1); //Añade 1 al contador de empresas de la ciudad.
 					end;
 			end;
 
@@ -129,17 +147,28 @@ procedure altaCliente();
 	end;
 
 procedure altaCiudad();
+	var
+		cod: string;
 	begin
-		ClrScr;
-		writeln(Utf8ToAnsi('Ingrese el código de la ciudad.'));
-		repeat //VALIDACION DE LARGO DEL CóDIGO
-			readln(ciudades[contCiudades][0]);
-			if length(ciudades[contCiudades][0]) <= 3 then
-				pass := true
-			else
-				writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres. Ingreselo nuevamente:'));
-		until(pass = true);
-		pass := false;
+		repeat
+			ClrScr;
+			pass := true; //Hacete que se repita el ingreso si el codigo es invalido.
+      writeln(Utf8ToAnsi('Ingrese el código de la ciudad.'));
+      readln(cod);
+      for i := 0 to contCiudades-1 do
+          begin
+              if cod = ciudades[i][0] then //verifica que el codigo no exista.
+                  pass := false
+              else
+              		writeln(Utf8ToAnsi('Ese código ya existe!'));
+          end;
+      if ((length(cod) > 3) or (length(cod) < 1)) then //Verigica el largo de lcodigo.
+        begin
+            pass := false;
+            writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres.'));
+        end;
+	  until (pass = true);
+	  ciudades[contCiudades][0] := cod;
 
 		writeln('Ingrese el nombre de la ciudad.');
 		readln(ciudades[contCiudades][1]);
@@ -147,14 +176,12 @@ procedure altaCiudad();
 		writeln(Utf8ToAnsi('Ciudad añadida exitosamente, pulse cualquier tecla para volver al menu anterior.'));
 		ciudades[contCiudades][2] := '0';
 		ordenarCiudades();
-		mostrarCiudades();
 		contCiudades := contCiudades + 1;
 		readKey;
 	end;
 
 procedure altaProyecto();
 	var
-		i: integer;
 		opt: string;
 	begin
 		ClrScr;
@@ -169,7 +196,6 @@ procedure altaProyecto();
 		pass := false;
 		ClrScr;
 
-		
 		repeat
 			writeln('Seleccione una empresa.');
 			for i := 0 to contEmpresas-1 do
@@ -182,7 +208,7 @@ procedure altaProyecto();
 		for i := 0 to contEmpresas-1 do
 			begin
 				if opt = IntToStr(i+1) then
-					proyectos[contProyectos][2] := empresas[i,0];
+					proyectos[contProyectos][2] := empresas[i,0]; //Guarda el codigo de la empresa en el proyecto.
 			end;
 
 		repeat
@@ -210,8 +236,7 @@ procedure altaProyecto();
 		for i := 0 to contCiudades-1 do
 			begin
 				if opt = IntToStr(i+1) then
-					empresas[contEmpresas][4] := ciudades[i,0];
-					ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1);
+					proyectos[contProyectos][4] := ciudades[i,0]; //Asigna la ciudad al proyecto
 			end;
 
 		writeln(Utf8ToAnsi('Proyecto añadido exitosamente, pulse cualquier tecla para volver al menu anterior.'));
@@ -270,15 +295,16 @@ procedure showEmpresa();
 begin
 	repeat
 		ClrScr;
-	    writeln(Utf8ToAnsi('MENÚ EMPRESAS DESARROLLADORAS:'+#13+#10+'1. Alta de CIUDADES '+#13+#10+'2. Alta de EMPRESAS '+#13+#10+'3. Alta de PROYECTOS'+#13+#10+'4. Alta de PRODUCTOS (mantenimiento)'+#13+#10+'0. Volver al menú principal'));
+	    writeln(Utf8ToAnsi('MENÚ EMPRESAS DESARROLLADORAS:'+#13+#10+'1. Alta de CIUDADES '+#13+#10+'2. Alta de EMPRESAS '+#13+#10+'3. Alta de PROYECTOS'+#13+#10+'4. Alta de PRODUCTOS (mantenimiento)'+#13+#10+'5. Mostrar Ciudades'+#13+#10+'0. Volver al menú principal'));
 	    repeat
 	    	opt := readKey;
-	    until (opt = '1') or (opt = '2') or (opt = '3') or (opt = '4') or (opt = '0');
+	    until (opt = '1') or (opt = '2') or (opt = '3') or (opt = '4') or (opt = '0') or (opt = '5');
 	    case opt of
 	    	'1': altaCiudad();
 	    	'2': altaEmpresa();
 	    	'3': altaProyecto();
 	    	'4': ;
+	    	'5': mostrarCiudades();
 	    end;
 	until (opt = '0');
 end;
@@ -358,7 +384,8 @@ begin
 end;
 
 begin //Main
-	contProyectos := 1;
+	//Valores de testeo:
+	{contProyectos := 1;
 	contCiudades := 3;
 	contClientes := 0;
 	contEmpresas := 1;
@@ -382,7 +409,8 @@ begin //Main
 	empresas[0,2] := 'Zeballos 1341';
 	empresas[0,3] := 'empresa@ejemplo.com';
 	empresas[0,4] := '4583818';
-	empresas[0,5] := 'BAS';
+	empresas[0,5] := 'BAS'; }
+
   repeat
   	ClrScr;
   	writeln(Utf8ToAnsi('MENÚ PRINCIPAL: '+#13+#10+'1. EMPRESAS'+#13+#10+'2. CLIENTES'+#13+#10+'0. Salir'+#13+#10));
