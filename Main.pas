@@ -248,25 +248,24 @@ procedure altaProyecto();
 			end;
 
 		repeat
+			ClrScr;
 			writeln('Ingrese la etapa del proyecto.'+#13+#10+'P. Preventa'+#13+#10+'O. Obra'+#13+#10+'T. Terminado');
 			readln(proyectos[contProyectos][2]);
-			ClrScr;
 		until (proyectos[contProyectos][2] = 'P') or (proyectos[contProyectos][2] = 'O') or (proyectos[contProyectos][2] = 'T');
 		
 		repeat
+			ClrScr;
 			writeln('Ingrese el tipo de proyecto.'+#13+#10+'C. Casa'+#13+#10+'D. Departamento'+#13+#10+'O. Oficina'+#13+#10+'L. Lotes');
 			readln(proyectos[contProyectos][3]);
-			ClrScr;
 		until (proyectos[contProyectos][3] = 'C' ) or (proyectos[contProyectos][3] = 'D' ) or 
 			(proyectos[contProyectos][3] = 'O' ) or (proyectos[contProyectos][3] = 'L' );
 
 		repeat
+			ClrScr;
 			writeln('Seleccione una ciudad.');
 			for i := 0 to contCiudades-1 do
 				writeLn(IntToStr(i+1) + '. ' + ciudades[i,1]); //ESCRIBE LAS OPCIONES
-		
 			readln(opt); //LEE LA OPCION
-			ClrScr;
 		until (StrToInt(opt) <= contCiudades);
 
 		for i := 0 to contCiudades-1 do
@@ -275,6 +274,11 @@ procedure altaProyecto();
 					proyectos[contProyectos][4] := ciudades[i,0]; //Asigna la ciudad al proyecto
 			end;
 
+		ClrScr;
+		writeln('Ingrese la Cantidad.');
+		readln(proyectos[contProyectos][5]);
+
+		ClrScr;
 		writeln(Utf8ToAnsi('Proyecto añadido exitosamente, pulse cualquier tecla para volver al menu anterior.'));
 		contProyectos := contProyectos + 1;
 		readKey;
