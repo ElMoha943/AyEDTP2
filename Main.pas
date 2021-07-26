@@ -36,6 +36,7 @@ procedure mostrarCiudades();
 	var
 		max, id: Integer;
 	begin
+		ClrScr;
 		max := 0;
 		id := 0;
 		for i := 0 to contCiudades do
@@ -68,10 +69,12 @@ procedure altaEmpresa();
       for i := 0 to contEmpresas-1 do
           begin
               if cod = empresas[i][0] then //verifica que el codigo no exista.
-                  pass := false
-              else
+              begin
+                  pass := false;
               		writeln(Utf8ToAnsi('Error: Ese código ya existe!'));
               		readKey;
+              		Break;
+             	end;
           end;
       if ((length(cod) > 3) or (length(cod) < 1)) then //Verigica el largo de lcodigo.
         begin
@@ -100,6 +103,11 @@ procedure altaEmpresa();
 				pass := c in ['@'];
 				if pass then Break;
 			end;
+			if not pass then
+			begin
+				writeln('Error: Ese email no es valido! (Debe contener @).');
+				readKey;
+			end;
 		until (pass = true);
 
 		repeat
@@ -110,12 +118,13 @@ procedure altaEmpresa();
 			for c in telefono do
 				begin
 					pass := c in ['0'..'9'];
-					if not pass then
-					begin
-						writeln('Error: Ese telefono no es valido!');
-						Break;
-					end;
+					if not pass then Break;
 				end;
+			if not pass then
+			begin
+				writeln('Error: Ese telefono no es valido!');
+				readKey;
+			end;
 		until (pass=true);
 		empresas[contEmpresas][4] := telefono;
 		
@@ -169,14 +178,18 @@ procedure altaCiudad();
       for i := 0 to contCiudades-1 do
           begin
               if cod = ciudades[i][0] then //verifica que el codigo no exista.
-                  pass := false
-              else
+              	begin
+                  pass := false;
               		writeln(Utf8ToAnsi('Ese código ya existe!'));
+              		readkey;
+              		break;
+              	end;
           end;
       if ((length(cod) > 3) or (length(cod) < 1)) then //Verigica el largo de lcodigo.
         begin
             pass := false;
             writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres.'));
+            readkey;
         end;
 	  until (pass = true);
 	  ciudades[contCiudades][0] := cod;
@@ -193,18 +206,30 @@ procedure altaCiudad();
 
 procedure altaProyecto();
 	var
-		opt: string;
+		opt, cod: string;
 	begin
-		ClrScr;
-		writeln(Utf8ToAnsi('Ingrese el código del proyecto.'));
-		repeat //VALIDACION DE LARGO DEL CÓDIGO
-			readln(proyectos[contProyectos][0]);
-			if length(proyectos[contProyectos][0]) <= 3 then
-				pass := true
-			else
-				writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres. Ingreselo nuevamente:'));
-		until(pass = true);
-		pass := false;
+		repeat
+			ClrScr;
+			pass := true; //Hacete que se repita el ingreso si el codigo es invalido.
+      writeln(Utf8ToAnsi('Ingrese el código de la ciudad.'));
+      readln(cod);
+      for i := 0 to contProyectos-1 do
+          begin
+              if cod = proyectos[i][0] then //verifica que el codigo no exista.
+              	begin
+                  pass := false;
+              		writeln(Utf8ToAnsi('Ese código ya existe!'));
+              		readkey;
+              		break;
+              	end;
+          end;
+      if ((length(cod) > 3) or (length(cod) < 1)) then //Verigica el largo de lcodigo.
+        begin
+            pass := false;
+            writeln(Utf8ToAnsi('El código debe tener un maximo de 3 caracteres.'));
+        end;
+	  until (pass = true);
+	  proyectos[i][contProyectos] := cod;
 		ClrScr;
 
 		repeat
