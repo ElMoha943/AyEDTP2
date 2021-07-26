@@ -1,3 +1,5 @@
+// Trabajo Práctico 2 - AyED comisión 102
+// Integrantes: Valentino Casadidio, Sebastian Giordanino, Mateo Querede
 program tpayed2;
 uses crt, sysutils;
 
@@ -116,24 +118,6 @@ procedure altaEmpresa();
 				end;
 		until (pass=true);
 		empresas[contEmpresas][4] := telefono;
-
-		// repeat
-		// 	ClrScr;
-		// 	pass := true;
-		// 	writeln('Ingrese el telefono de la empresa.');
-		// 	readln(telefono);
-		// 	for i := 0 to length(telefono) do
-	 //        begin
-	 //            if (telefono[i] > '9') or (telefono[i] < '0') then //CAMBIR, NO ANDA
-	 //                pass := false;
-	 //        end;
-	 //    if pass = false then
-	 //    	begin
-		//     	writeln('Error: Ese telefono no es valido!');
-		//     	readKey;
-		//    	end;
-		// until (pass=true);
-		// empresas[contEmpresas][4] := telefono;
 		
 		repeat
 			ClrScr;
@@ -145,7 +129,7 @@ procedure altaEmpresa();
 
 		for i := 0 to contCiudades-1 do
 			begin
-				if opt = IntToStr(i) then
+				if opt = IntToStr(i+1) then
 					begin
 						empresas[contEmpresas][5] := ciudades[i,0]; //Asigna el codigo de ciudad a la empresa.
 						ciudades[i][2] := IntToStr(StrToInt(ciudades[i][2]) + 1); //Añade 1 al contador de empresas de la ciudad.
