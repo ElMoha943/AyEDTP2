@@ -56,6 +56,7 @@ procedure mostrarCiudades();
 procedure altaEmpresa();
 	var
 		opt, cod, telefono: string;
+		c: char;
 	begin
 		repeat
 			ClrScr;
@@ -88,28 +89,54 @@ procedure altaEmpresa();
 		readln(empresas[contEmpresas][2]);
 		ClrScr;
 
-		writeln('Ingrese el mail de la empresa.');
-		readln(empresas[contEmpresas][3]);
+		repeat
+			ClrScr;
+			writeln('Ingrese el mail de la empresa.');
+			readln(empresas[contEmpresas][3]);
+			for c in empresas[contEmpresas][3] do 
+			begin
+				pass := c in ['@'];
+				if pass then Break;
+			end;
+		until (pass = true);
 
 		repeat
-			ClrScr
+			ClrScr;
 			pass := true;
 			writeln('Ingrese el telefono de la empresa.');
 			readln(telefono);
-			for i := 0 to length(telefono) do
-	        begin
-	            if (telefono[i] < '9') or (telefono[i] > '0') then //CAMBIR, NO ANDA
-	            	begin
-	                pass := false;
-	                writeln('Error: Ese telefono no es valido!');
-	                readKey;
-	              end;
-	        end;
+			for c in telefono do
+				begin
+					pass := c in ['0'..'9'];
+					if not pass then
+					begin
+						writeln('Error: Ese telefono no es valido!');
+						Break;
+					end;
+				end;
 		until (pass=true);
 		empresas[contEmpresas][4] := telefono;
+
+		// repeat
+		// 	ClrScr;
+		// 	pass := true;
+		// 	writeln('Ingrese el telefono de la empresa.');
+		// 	readln(telefono);
+		// 	for i := 0 to length(telefono) do
+	 //        begin
+	 //            if (telefono[i] > '9') or (telefono[i] < '0') then //CAMBIR, NO ANDA
+	 //                pass := false;
+	 //        end;
+	 //    if pass = false then
+	 //    	begin
+		//     	writeln('Error: Ese telefono no es valido!');
+		//     	readKey;
+		//    	end;
+		// until (pass=true);
+		// empresas[contEmpresas][4] := telefono;
 		
 		repeat
-			ClrScr
+			ClrScr;
 			writeLn('Selecciona una ciudad');
 			for i := 0 to contCiudades-1 do
 				writeLn(IntToStr(i+1) + '. ' + ciudades[i,1]); //ESCRIBE LAS OPCIONES
@@ -385,7 +412,7 @@ end;
 
 begin //Main
 	//Valores de testeo:
-	{contProyectos := 1;
+	contProyectos := 1;
 	contCiudades := 3;
 	contClientes := 0;
 	contEmpresas := 1;
@@ -409,7 +436,7 @@ begin //Main
 	empresas[0,2] := 'Zeballos 1341';
 	empresas[0,3] := 'empresa@ejemplo.com';
 	empresas[0,4] := '4583818';
-	empresas[0,5] := 'BAS'; }
+	empresas[0,5] := 'BAS'; 
 
   repeat
   	ClrScr;
